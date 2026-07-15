@@ -14,24 +14,24 @@ export default function Signup() {
             </p>
           </div>
           <form className="space-y-4 mt-6">
-            <Input id="name" label="Full Name" placeholder="John Doe" />
+            <Input id="name" label="Full Name*" placeholder="John Doe" />
             <Input
               id="email"
               type="email"
-              label="Email"
+              label="Email*"
               placeholder="Enter your email"
             />
             <Input
               id="password"
               type="password"
-              label="Password"
+              label="Password*"
               placeholder="Create a password"
             />
             <Button className="w-full">Create Account</Button>
           </form>
           <p className="mt-4 text-sm text-center text-(--text-secondary)">
             Already have an account?{" "}
-            <Link to="/login" className="font-bold text-(--primary)">
+            <Link to="/signin" className="font-bold text-(--primary)">
               Sign In
             </Link>
           </p>

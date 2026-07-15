@@ -19,6 +19,7 @@ export default function Signin() {
               type="email"
               label="Email"
               placeholder="Enter your email"
+              required
             />
             <Input
               id="password"
