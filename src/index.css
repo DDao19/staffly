@@ -12,6 +12,9 @@
   --surface-secondary: #f1f5f9;
 
   /* Text */
+  --font-primary: "Manrope", sans-serif;
+  --font-secondary: "Roboto Slab", serif;
+
   --text: #0f172a;
   --text-inverse: #ffffff;
   --text-secondary: #64748b;
@@ -22,8 +25,13 @@
 
   /* Status */
   --success: #22c55e;
+  --success-bg: #dcfce7;
+
   --warning: #f59e0b;
+  --warning-bg: #fef3c7;
+
   --error: #ef4444;
+  --error-bg: #fee2e2;
 
   /* Secondary */
   --destructive: #dc2626;
@@ -48,7 +56,7 @@
 
 @layer base {
   html {
-    font-family: "Manrope", sans-serif;
+    font-family: var(--font-primary);
   }
 
   body {

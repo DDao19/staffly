@@ -5,7 +5,7 @@ export function Button({
   className = "",
   ...props
 }) {
-  const baseClasses = `inline-flex items-center justify-center text-sm font-bold py-2 px-4 rounded-md transition-colors duration-200 cursor-pointer focus:outline-none
+  const baseClasses = `inline-flex items-center justify-center gap-2 text-sm font-bold py-2 px-4 rounded-md transition-colors duration-200 cursor-pointer focus:outline-none
   focus:ring-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98]`;
 
   const variantClasses = {
