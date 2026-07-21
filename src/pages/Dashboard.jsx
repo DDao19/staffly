@@ -1,7 +1,19 @@
+// import { useAuth } from "../components/hooks/useAuth";
+
+import DashboardHeader from "../components/dashboard/DashboardHeader";
+
 export default function Dashboard() {
   return (
-    <section className="max-w-7xl mx-auto px-5 py-10">
-      <h1 className="text-3xl font-bold">My Dashboard</h1>
+    <section className="max-w-7xl mx-auto  py-10 space-y-10">
+      <DashboardHeader />
+
+      <section>
+        <h2>Stats cards will go here</h2>
+      </section>
+
+      <section>
+        <h2>Recent employees table will go here</h2>
+      </section>
     </section>
   );
 }

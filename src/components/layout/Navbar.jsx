@@ -1,17 +1,39 @@
+import { useState, useEffect, useRef } from "react";
+
 import { Link } from "react-router-dom";
 import { Button } from "../ui/Button";
 
 import { useAuth } from "../hooks/useAuth";
 
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
+
   const { user, loading, logout } = useAuth();
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   if (loading) {
     return null;
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 px-5 bg-(--surface) border-b border-slate-200">
+    <header
+      ref={menuRef}
+      className="fixed top-0 left-0 right-0 px-5 bg-(--surface) border-b border-slate-200"
+    >
       <nav className="max-w-7xl mx-auto h-16 flex items-center justify-between gap-5">
         <div>
           <Link to="/">
@@ -20,7 +42,15 @@ export default function Navbar() {
             </h1>
           </Link>
         </div>
-        <div className="flex items-center space-x-2">
+
+        <button
+          className="md:hidden text-3xl"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          ☰
+        </button>
+
+        <div className="hidden md:flex items-center space-x-2">
           {user ? (
             <>
               <p>Welcome back, {user.name}</p>
@@ -44,6 +74,26 @@ export default function Navbar() {
           )}
         </div>
       </nav>
+
+      {isOpen && (
+        <div className="md:hidden px-5 pb-4">
+          {!user && (
+            <div className="flex flex-col gap-3">
+              <Link to="/signin" onClick={() => setIsOpen(false)}>
+                <Button type="button" variant="outline" className="w-full">
+                  Sign In
+                </Button>
+              </Link>
+
+              <Link to="/signup" onClick={() => setIsOpen(false)}>
+                <Button type="button" variant="primary" className="w-full">
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </header>
   );
 }
