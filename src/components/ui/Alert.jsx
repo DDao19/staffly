@@ -1,5 +1,5 @@
 export function Alert({ variant = "error", message }) {
-  const baseClasses = "text-sm font-bold p-3 rounded-md";
+  const baseClasses = "text-sm font-medium p-3 rounded-md leading-relaxed";
   const variantClasses = {
     success: "text-(--success) bg-(--success-bg)",
     warning: "text-(--warning) bg-(--warning-bg)",

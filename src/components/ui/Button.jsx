@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 export function Button({
   children,
   variant = "primary",
@@ -10,13 +12,16 @@ export function Button({
 
   const variantClasses = {
     primary:
-      "text-[var(--text-inverse)] bg-[var(--primary)] hover:bg-[var(--primary-hover)] focus:ring-[var(--primary-light)]",
+      "text-(--text-inverse) bg-(--primary) hover:bg-(--primary-hover) focus:ring-(--primary-light)",
 
     destructive:
-      "text-[var(--text-inverse)] bg-[var(--destructive)] hover:bg-[var(--destructive-hover)] focus:ring-[var(--destructive-light)]",
+      "text-(--text-inverse) bg-(--destructive) hover:bg-(--destructive-hover) focus:ring-(--destructive-light)",
 
     outline:
-      "text-[var(--text)] border border-[var(--border)] hover:bg-[var(--primary-light)] focus:ring-[var(--primary-light)]",
+      "text-(--text) border border-(--border) hover:bg-(--primary-light) focus:ring-(--primary-light)",
+
+    ghost:
+      "text-(--text-secondary) bg-transparent hover:bg-(--surface-secondary) hover:text-(--text)",
   };
 
   const variantClass = variantClasses[variant] ?? variantClasses.primary;
@@ -24,7 +29,7 @@ export function Button({
   return (
     <button
       type={type}
-      className={`${baseClasses} ${variantClass} ${className}`}
+      className={twMerge(baseClasses, variantClass, className)}
       {...props}
     >
       {children}

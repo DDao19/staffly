@@ -1,12 +1,8 @@
 // import { useAuth } from "../components/hooks/useAuth";
 
-import DashboardHeader from "../components/dashboard/DashboardHeader";
-
 export default function Dashboard() {
   return (
     <section className="max-w-7xl mx-auto  py-10 space-y-10">
-      <DashboardHeader />
-
       <section>
         <h2>Stats cards will go here</h2>
       </section>

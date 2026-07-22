@@ -73,12 +73,12 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-(--primary-light) to-white">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-white to-(--primary-light)">
       <section className="max-w-7xl w-full px-5 flex flex-col items-center justify-center">
-        <div className="w-full max-w-md bg-(--surface) border border-(--border) p-8 rounded-lg shadow-sm space-y-4">
+        <div className="w-full max-w-md bg-(--surface) border border-(--border) p-5 sm:p-8 rounded-lg shadow-sm space-y-4">
           <div className="text-center">
             <h1 className="text-xl font-bold">Create an account</h1>
-            <p className="mt-2  text-(--text-secondary)">
+            <p className="mt-3 text-(--text-secondary)">
               Create your account to start managing employees.
             </p>
           </div>

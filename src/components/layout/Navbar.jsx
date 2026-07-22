@@ -12,6 +12,8 @@ export default function Navbar() {
   const { user, loading, logout } = useAuth();
 
   useEffect(() => {
+    if (!isOpen) return;
+
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setIsOpen(false);
@@ -23,7 +25,7 @@ export default function Navbar() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isOpen]);
 
   if (loading) {
     return null;
@@ -47,7 +49,7 @@ export default function Navbar() {
           className="md:hidden text-3xl"
           onClick={() => setIsOpen(!isOpen)}
         >
-          ☰
+          {isOpen ? "✕" : "☰"}
         </button>
 
         <div className="hidden md:flex items-center space-x-2">
@@ -77,7 +79,29 @@ export default function Navbar() {
 
       {isOpen && (
         <div className="md:hidden px-5 pb-4">
-          {!user && (
+          {user ? (
+            <div className="flex flex-col gap-3">
+              <p className="text-sm text-center">Welcome back, {user.name}</p>
+
+              <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                <Button type="button" variant="primary" className="w-full">
+                  Dashboard
+                </Button>
+              </Link>
+
+              <Button
+                type="button"
+                variant="destructive"
+                className="w-full"
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          ) : (
             <div className="flex flex-col gap-3">
               <Link to="/signin" onClick={() => setIsOpen(false)}>
                 <Button type="button" variant="outline" className="w-full">
