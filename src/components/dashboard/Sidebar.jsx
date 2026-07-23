@@ -31,11 +31,11 @@ const otherItems = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onClose = () => {} }) {
   const { user, logout } = useAuth();
-  console.log(user);
+
   return (
-    <aside className="flex flex-col w-64 min-h-screen bg-(--surface) border-r border-(--border) p-5">
+    <aside className="flex flex-col w-64 h-full bg-(--surface) border-r border-(--border) p-5">
       <div>
         <h1 className="text-center font-secondary uppercase tracking-wide text-2xl font-bold">
           Staff<span className="text-(--primary)">ly</span>
@@ -55,6 +55,7 @@ export default function Sidebar() {
               <NavLink
                 key={item.name}
                 to={item.path}
+                onClick={onClose}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive
@@ -99,19 +100,22 @@ export default function Sidebar() {
           })}
         </div>
       </nav>
+
       <div className="border-t border-(--border) pt-5">
         <div className="flex items-center gap-3">
-          <CircleUserRound size={30} className="text-(--text)" />
-          <div>
-            <p className="text-sm font-semibold">{user?.name}</p>
+          <CircleUserRound size={30} className="text-(--primary)" />
+          <div className="min-w-0">
+            <p className="text-sm font-semibold truncate">{user?.name}</p>
 
-            <p className="text-xs text-(--text-secondary)">{user?.email}</p>
+            <p className="text-xs text-(--text-secondary) truncate">
+              {user?.email}
+            </p>
           </div>
         </div>
         <Button
           type="button"
           variant="outline"
-          className="w-full mt-4 hover:bg-(--primary-light)"
+          className="w-full mt-4 hover:bg-(--error-bg) hover:border-(--error-bg) hover:text-(--error)"
           onClick={logout}
         >
           <LogOut size={18} /> Logout
