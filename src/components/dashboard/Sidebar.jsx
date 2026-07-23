@@ -42,7 +42,7 @@ export default function Sidebar({ onClose = () => {} }) {
         </h1>
       </div>
 
-      <nav className="flex-1 mt-8 space-y-8">
+      <nav className="flex-1 overflow-y-auto mt-8 space-y-8">
         <div className="space-y-2">
           <p className="pb-1 text-xs font-semibold uppercase tracking-widest text-(--text-secondary)">
             Main Menu

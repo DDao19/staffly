@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import { Menu } from "lucide-react";
 
 import Sidebar from "./Sidebar";
+import DashboardHeader from "./DashboardHeader";
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,7 +21,7 @@ export default function DashboardLayout() {
   }, [isSidebarOpen]);
 
   return (
-    <div className="min-h-screen flex bg-(--background)">
+    <div className="h-screen flex bg-(--background) overflow-hidden">
       <div
         className={`fixed inset-0 z-40 md:hidden ${isSidebarOpen ? "pointer-events-auto" : "pointer-events-none"}`}
       >
@@ -34,11 +34,9 @@ export default function DashboardLayout() {
 
         <div
           className={`relative w-64 h-full transform transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+          onClick={(e) => e.stopPropagation()}
         >
-          <Sidebar
-            onClose={() => setIsSidebarOpen(false)}
-            onClick={(e) => e.stopPropagation()}
-          />
+          <Sidebar onClose={() => setIsSidebarOpen(false)} />
         </div>
       </div>
 
@@ -47,17 +45,8 @@ export default function DashboardLayout() {
       </div>
 
       <div className="flex-1 flex flex-col">
-        <header className="h-16 bg-(--surface) border-b border-(--border)">
-          <button
-            className="md:hidden rounded-xl bg-(--primary-light) p-2"
-            onClick={() => setIsSidebarOpen(true)}
-          >
-            <Menu />
-          </button>
-          <div>Header Area</div>
-        </header>
-
-        <main className="flex-1 p-6">
+        <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
+        <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
       </div>
