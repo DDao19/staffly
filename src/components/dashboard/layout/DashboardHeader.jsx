@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Menu, Search, Settings, User } from "lucide-react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function DashboardHeader({ onMenuClick = () => {} }) {
   const { user } = useAuth();
@@ -14,8 +14,8 @@ export default function DashboardHeader({ onMenuClick = () => {} }) {
   const pageTitle = pageTitles[pathname] || "Dashboard";
 
   return (
-    <header className="h-16 bg-(--surface) border-b border-(--border)">
-      <div className="h-full grid grid-cols-3 items-center px-6">
+    <header className="h-16 bg-(--surface) border-b border-(--border) px-6">
+      <div className="h-full max-w-7xl mx-auto grid grid-cols-3 items-center">
         <div className="flex items-center gap-4">
           <button
             className="md:hidden rounded-xl bg-(--primary-light) p-2"

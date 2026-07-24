@@ -1,16 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import PublicLayout from "./components/layout/PublicLayout";
-// import Navbar from "./components/layout/Navbar";
 import Landing from "./pages/Landing";
-// import Footer from "./components/layout/Footer";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import AuthProvider from "./components/context/AuthProvider";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import GuestRoute from "./components/auth/GuestRoute";
-import DashboardLayout from "./components/dashboard/DashboardLayout";
+import DashboardLayout from "./components/dashboard/layout/DashboardLayout";
 
 export default function App() {
   return (

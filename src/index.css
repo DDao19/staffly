@@ -38,6 +38,19 @@
   --destructive-hover: #b91c1c;
   --destructive-light: #fee2e2;
 
+  /* Dashboard */
+  --dashboard-purple-bg: #ede9fe;
+  --dashboard-purple: #7c3aed;
+
+  --dashboard-green-bg: #dcfce7;
+  --dashboard-green: #16a34a;
+
+  --dashboard-yellow-bg: #fef3c7;
+  --dashboard-yellow: #d97706;
+
+  --dashboard-blue-bg: #dbeafe;
+  --dashboard-blue: #2563eb;
+
   /* Animation */
   --animate-fade-up: fade-up 0.6s ease-out forwards;
 
