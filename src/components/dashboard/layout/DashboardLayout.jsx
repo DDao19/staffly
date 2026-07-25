@@ -23,7 +23,7 @@ export default function DashboardLayout() {
   return (
     <div className="h-screen flex bg-(--background) overflow-hidden">
       <div
-        className={`fixed inset-0 z-40 md:hidden ${isSidebarOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+        className={`fixed inset-0 z-40 lg:hidden ${isSidebarOpen ? "pointer-events-auto" : "pointer-events-none"}`}
       >
         <div
           className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${
@@ -40,11 +40,11 @@ export default function DashboardLayout() {
         </div>
       </div>
 
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <Sidebar />
       </div>
 
-      <div className="flex-1 flex flex-col">
+      <div className="min-w-0 flex-1 flex flex-col">
         <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />

@@ -1,14 +1,9 @@
 import { NavLink } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Users,
-  Settings,
-  CircleUserRound,
-  LogOut,
-} from "lucide-react";
+import { LayoutDashboard, Users, Settings, LogOut } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 import { Button } from "../../ui/Button";
+import { Avatar } from "../../ui/Avatar";
 
 const navItems = [
   {
@@ -103,7 +98,7 @@ export default function Sidebar({ onClose = () => {} }) {
 
       <div className="border-t border-(--border) pt-5 px-2.5">
         <div className="flex items-center gap-3">
-          <CircleUserRound size={30} className="text-(--primary)" />
+          <Avatar />
           <div className="min-w-0">
             <p className="text-sm font-semibold truncate">{user?.name}</p>
 

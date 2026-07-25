@@ -1,4 +1,15 @@
-export function Input({ id, label, type = "text", placeholder, ...props }) {
+import { twMerge } from "tailwind-merge";
+
+export function Input({
+  id,
+  label,
+  type = "text",
+  placeholder,
+  className = "",
+  ...props
+}) {
+  const baseClass =
+    "block w-full rounded-md border border-(--border) bg-(--surface-secondary) px-3 py-2 text-sm text-(--text) placeholder:text-(--text-secondary) shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-(--primary-light) focus:border-(--primary)";
   return (
     <div>
       <label
@@ -11,7 +22,7 @@ export function Input({ id, label, type = "text", placeholder, ...props }) {
         id={id}
         type={type}
         placeholder={placeholder}
-        className="block w-full rounded-md border border-(--border) bg-(--surface-secondary) px-3 py-2.5 text-sm text-(--text) placeholder:text-(--text-secondary) shadow-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-(--primary-light) focus:border-(--primary)"
+        className={twMerge(baseClass, className)}
         {...props}
       />
     </div>

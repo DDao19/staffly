@@ -1,5 +1,4 @@
-export default function Badge({ children, variant = "default" }) {
-  console.log(variant);
+export function Badge({ children, variant = "default" }) {
   const variants = {
     success: "bg-(--dashboard-green-bg) text-(--dashboard-green)",
     warning: "bg-(--dashboard-yellow-bg) text-(--dashboard-yellow)",

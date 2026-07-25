@@ -1,14 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import PublicLayout from "./components/layout/PublicLayout";
-import Landing from "./pages/Landing";
-import Signin from "./pages/Signin";
-import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
 import AuthProvider from "./components/context/AuthProvider";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import GuestRoute from "./components/auth/GuestRoute";
 import DashboardLayout from "./components/dashboard/layout/DashboardLayout";
+import Landing from "./pages/Landing";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import Employees from "./pages/Employees";
+import NewEmployee from "./pages/NewEmployee";
 
 export default function App() {
   return (
@@ -27,6 +29,8 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/employees" element={<Employees />} />
+              <Route path="/employees/new" element={<NewEmployee />} />
             </Route>
           </Route>
         </Routes>

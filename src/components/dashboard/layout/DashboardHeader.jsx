@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
-import { Menu, Search, Settings, User } from "lucide-react";
+import { Menu, Search, Settings } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import { Avatar } from "../../ui/Avatar";
 
 export default function DashboardHeader({ onMenuClick = () => {} }) {
   const { user } = useAuth();
@@ -18,7 +19,7 @@ export default function DashboardHeader({ onMenuClick = () => {} }) {
       <div className="h-full max-w-7xl mx-auto grid grid-cols-3 items-center">
         <div className="flex items-center gap-4">
           <button
-            className="md:hidden rounded-xl bg-(--primary-light) p-2"
+            className="lg:hidden rounded-xl bg-(--primary-light) p-2"
             onClick={onMenuClick}
           >
             <Menu size={24} />
@@ -31,7 +32,7 @@ export default function DashboardHeader({ onMenuClick = () => {} }) {
             <input
               type="text"
               placeholder="Search employees..."
-              className="w-full rounded-md border border-(--border) bg-(--surface-secondary) py-2 pr-10 pl-3 text-sm text-(--text) placeholder:text-(--text-secondary) focus:outline-none focus:ring-2 focus:ring-(--primary-light)"
+              className="w-full rounded-lg border border-(--border) bg-(--surface-secondary) py-2 pr-10 pl-3 text-sm text-(--text) placeholder:text-(--text-secondary) focus:outline-none focus:ring-2 focus:ring-(--primary-light)"
             />
             <Search
               size={18}
@@ -46,9 +47,7 @@ export default function DashboardHeader({ onMenuClick = () => {} }) {
           </button>
 
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-(--primary-light) flex items-center justify-center">
-              <User size={20} />
-            </div>
+            <Avatar />
 
             <div className="hidden lg:block">
               <p className="text-sm font-semibold text-(--text)">{user.name}</p>
