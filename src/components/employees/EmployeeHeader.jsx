@@ -17,7 +17,7 @@ export default function EmployeeHeader({ onAddEmployee }) {
       <Button
         variant="primary"
         onClick={onAddEmployee}
-        className="text-xs whitespace-nowrap"
+        className="group text-sm whitespace-nowrap"
         aria-label="Add Employee"
       >
         <Plus size={18} />
