@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
+import { DashboardScrollProvider } from "../../context/DashboardScrollContext";
 
 import Sidebar from "./Sidebar";
 import DashboardHeader from "./DashboardHeader";
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const mainRef = useRef(null);
 
   // Handles <body> no scrolling when mobile menu is open
   useEffect(() => {
@@ -46,8 +48,10 @@ export default function DashboardLayout() {
 
       <div className="min-w-0 flex-1 flex flex-col">
         <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
+        <main className="flex-1 overflow-y-auto p-6" ref={mainRef}>
+          <DashboardScrollProvider mainRef={mainRef}>
+            <Outlet />
+          </DashboardScrollProvider>
         </main>
       </div>
     </div>

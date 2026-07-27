@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "../ui/Input";
 import { SelectInput } from "../ui/SelectInput";
@@ -6,9 +6,12 @@ import { Button } from "../ui/Button";
 import { states } from "../../data/states";
 import { departments } from "../../data/departments";
 import { locations } from "../../data/locations";
+import { Alert } from "../ui/Alert";
+import { useDashboardScroll } from "../context/DashboardScrollContext";
 
 export function EmployeeForm() {
-  const [formData, setFormData] = useState({
+  const { scrollToTop } = useDashboardScroll();
+  const initialFormData = {
     firstName: "",
     lastName: "",
     email: "",
@@ -22,170 +25,376 @@ export function EmployeeForm() {
     location: "",
     salary: "",
     hireDate: "",
-  });
+  };
+
+  const [formError, setFormError] = useState("");
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
+
+  function validateForm() {
+    const newErrors = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required.";
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required.";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required.";
+    }
+
+    // Email format check
+    if (formData.email && !emailRegex.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required.";
+    }
+
+    // Phone validation check
+    if (formData.phone.trim()) {
+      const phoneRegex = /^(?:\(\d{3}\)\s?|\d{3}[- ]?)\d{3}[- ]?\d{4}$/;
+
+      if (!phoneRegex.test(formData.phone.trim())) {
+        newErrors.phone = "Please enter a valid phone number.";
+      }
+    }
+
+    if (!formData.street.trim()) {
+      newErrors.street = "Street address is required.";
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = "City is required.";
+    }
+
+    if (!formData.state) {
+      newErrors.state = "Please select a state.";
+    }
+
+    if (!formData.zipCode.trim()) {
+      newErrors.zipCode = "ZIP code is required.";
+    }
+
+    if (!formData.role.trim()) {
+      newErrors.role = "Role is required.";
+    }
+
+    // Zip code validation check
+    if (formData.zipCode.trim()) {
+      const zipRegex = /^\d{5}$/;
+
+      if (!zipRegex.test(formData.zipCode.trim())) {
+        newErrors.zipCode = "ZIP code must be exactly 5 digits";
+      }
+    }
+
+    if (!formData.department) {
+      newErrors.department = "Please select a department.";
+    }
+
+    if (!formData.location) {
+      newErrors.location = "Please select a work location.";
+    }
+
+    if (!formData.salary) {
+      newErrors.salary = "Salary is required.";
+    }
+
+    // Salary validation check
+    if (formData.salary.trim()) {
+      const salary = Number(formData.salary);
+
+      if (salary <= 0) {
+        newErrors.salary = "Salary must be greater than 0.";
+      } else if (!Number.isInteger(salary * 100)) {
+        newErrors.salary = "Salary cannot have more than 2 decimal places.";
+      }
+    }
+
+    if (!formData.hireDate) {
+      newErrors.hireDate = "Hire date is required.";
+    }
+
+    // Hire date validation check
+    if (formData.hireDate.trim()) {
+      const selectedDate = new Date(formData.hireDate);
+
+      const today = new Date();
+
+      // Ignore the current time so only the date is compared
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate > today) {
+        newErrors.hireDate = "Hire date cannot be in the future.";
+      }
+    }
+
+    return newErrors;
+  }
 
   const handleCancelForm = (e) => {
     e.preventDefault();
-    setFormData((prev) => ({
-      ...prev,
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      street: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      role: "",
-      department: "",
-      location: "",
-      salary: "",
-      hireDate: "",
-    }));
-    navigate("/employees");
+    setFormError("");
+    setSuccessMessage("");
+    setFormData(initialFormData);
+    setErrors({});
+
+    // navigate("/employees");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    setIsSubmitting(true);
+
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      scrollToTop();
+      setFormError("Please fill out all required fields below.");
+      setSuccessMessage("");
+      setIsSubmitting(false);
+      return;
+    }
+
+    setErrors({});
+    setFormError("");
+
     console.log(formData);
+    setFormData(initialFormData);
+    scrollToTop();
+    setSuccessMessage("Employee created successfully.");
+    setIsSubmitting(false);
   };
 
+  useEffect(() => {
+    if (!successMessage) return;
+
+    const timer = setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [successMessage]);
+
   return (
-    <div className="max-w-3xl rounded-xl border border-(--border) bg-(--surface) p-6 shadow-md">
+    <div className="max-w-3xl rounded-xl border border-(--border) bg-(--surface) p-6 shadow-md space-y-2">
+      {formError && <Alert variant="error" message={formError} />}
+      {successMessage && <Alert variant="success" message={successMessage} />}
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid gap-6 lg:grid-cols-2">
-          <Input
-            id="firstName"
-            name="firstName"
-            label="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-
-          <Input
-            id="lastName"
-            name="lastName"
-            label="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
-
-          <Input
-            id="email"
-            name="email"
-            label="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-
-          <Input
-            id="phone"
-            name="phone"
-            label="Phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-
-          <div className="md:col-span-2">
+          <div>
             <Input
-              id="street"
-              name="street"
-              label="Street Address"
-              value={formData.street}
+              id="firstName"
+              name="firstName"
+              label="First Name"
+              value={formData.firstName}
               onChange={handleChange}
-              required
+              error={errors.firstName}
             />
+            {errors.firstName && (
+              <p className="mt-1 text-sm text-(--error)">{errors.firstName}</p>
+            )}
           </div>
 
-          <Input
-            id="city"
-            name="city"
-            label="City"
-            value={formData.city}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <Input
+              id="lastName"
+              name="lastName"
+              label="Last Name"
+              value={formData.lastName}
+              onChange={handleChange}
+              error={errors.lastName}
+            />
 
-          <SelectInput
-            id="state"
-            name="state"
-            label="State"
-            value={formData.state}
-            placeholder="Select State"
-            options={states}
-            onChange={handleChange}
-            required
-          />
+            {errors.lastName && (
+              <p className="mt-1 text-sm text-(--error)">{errors.lastName}</p>
+            )}
+          </div>
 
-          <Input
-            id="zipCode"
-            name="zipCode"
-            label="ZIP Code"
-            value={formData.zipCode}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <Input
+              id="email"
+              name="email"
+              label="Email"
+              value={formData.email}
+              onChange={handleChange}
+              error={errors.email}
+            />
+            {errors.email && (
+              <p className="mt-1 text-sm text-(--error)">{errors.email}</p>
+            )}
+          </div>
 
-          <Input
-            id="role"
-            name="role"
-            label="Role"
-            value={formData.role}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <Input
+              id="phone"
+              name="phone"
+              label="Phone"
+              value={formData.phone}
+              onChange={handleChange}
+              error={errors.phone}
+            />
+            {errors.phone && (
+              <p className="mt-1 text-sm text-(--error)">{errors.phone}</p>
+            )}
+          </div>
 
-          <SelectInput
-            id="department"
-            name="department"
-            label="Department"
-            value={formData.department}
-            placeholder="Select Department"
-            options={departments}
-            onChange={handleChange}
-            required
-          />
+          <div className="md:col-span-2">
+            <div>
+              <Input
+                id="street"
+                name="street"
+                label="Street Address"
+                value={formData.street}
+                onChange={handleChange}
+                error={errors.street}
+              />
+              {errors.street && (
+                <p className="mt-1 text-sm text-(--error)">{errors.street}</p>
+              )}
+            </div>
+          </div>
 
-          <SelectInput
-            id="location"
-            name="location"
-            label="Location"
-            value={formData.location}
-            placeholder="Select office location"
-            options={locations}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <Input
+              id="city"
+              name="city"
+              label="City"
+              value={formData.city}
+              onChange={handleChange}
+              error={errors.city}
+            />
+            {errors.city && (
+              <p className="mt-1 text-sm text-(--error)">{errors.city}</p>
+            )}
+          </div>
 
-          <Input
-            type="number"
-            name="salary"
-            id="salary"
-            label="Salary"
-            value={formData.salary}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <SelectInput
+              id="state"
+              name="state"
+              label="State"
+              value={formData.state}
+              placeholder="Select State"
+              options={states}
+              onChange={handleChange}
+              error={errors.state}
+            />
+            {errors.state && (
+              <p className="mt-1 text-sm text-(--error)">{errors.state}</p>
+            )}
+          </div>
 
-          <Input
-            type="Date"
-            name="hireDate"
-            id="hire-date"
-            label="Hire Date"
-            value={formData.hireDate}
-            onChange={handleChange}
-            required
-          />
+          <div>
+            <Input
+              id="zipCode"
+              name="zipCode"
+              label="ZIP Code"
+              value={formData.zipCode}
+              onChange={handleChange}
+              error={errors.zipCode}
+            />
+            {errors.zipCode && (
+              <p className="mt-1 text-sm text-(--error)">{errors.zipCode}</p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              id="role"
+              name="role"
+              label="Role"
+              value={formData.role}
+              onChange={handleChange}
+              error={errors.role}
+            />
+            {errors.role && (
+              <p className="mt-1 text-sm text-(--error)">{errors.role}</p>
+            )}
+          </div>
+
+          <div>
+            <SelectInput
+              id="department"
+              name="department"
+              label="Department"
+              value={formData.department}
+              placeholder="Select Department"
+              options={departments}
+              onChange={handleChange}
+              error={errors.department}
+            />
+            {errors.department && (
+              <p className="mt-1 text-sm text-(--error)">{errors.department}</p>
+            )}
+          </div>
+
+          <div>
+            <SelectInput
+              id="location"
+              name="location"
+              label="Location"
+              value={formData.location}
+              placeholder="Select office location"
+              options={locations}
+              onChange={handleChange}
+              error={errors.location}
+            />
+            {errors.location && (
+              <p className="mt-1 text-sm text-(--error)">{errors.location}</p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              type="number"
+              step="0.01"
+              min="0"
+              max="1000000"
+              name="salary"
+              id="salary"
+              label="Salary"
+              value={formData.salary}
+              onChange={handleChange}
+              error={errors.salary}
+            />
+            {errors.salary && (
+              <p className="mt-1 text-sm text-(--error)">{errors.salary}</p>
+            )}
+          </div>
+
+          <div>
+            <Input
+              type="Date"
+              name="hireDate"
+              id="hire-date"
+              label="Hire Date"
+              value={formData.hireDate}
+              onChange={handleChange}
+              error={errors.hireDate}
+            />
+            {errors.hireDate && (
+              <p className="mt-1 text-sm text-(--error)">{errors.hireDate}</p>
+            )}
+          </div>
         </div>
 
         <hr className="border-(--border)" />
@@ -195,8 +404,8 @@ export function EmployeeForm() {
             Cancel
           </Button>
 
-          <Button variant="primary" type="submit">
-            Create Employee
+          <Button variant="primary" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Creating..." : "Create Employee"}
           </Button>
         </div>
       </form>
