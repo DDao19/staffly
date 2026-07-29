@@ -1,9 +1,9 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-// import { prisma } from "./lib/prisma.js";
+
 import { authRouter } from "./routes/authRoutes.js";
-// import { authMiddleware } from "./middleware/authMiddleware.js";
+import { employeeRouter } from "./routes/employeeRoutes.js";
 
 const app = express();
 
@@ -14,6 +14,9 @@ const PORT = process.env.PORT || 5000;
 
 // authentication route
 app.use("/api/auth", authRouter);
+
+// Employee creation route
+app.use("/api/employees", employeeRouter);
 
 app.get("/", (req, res) => {
   res.send("Staffly API is running");

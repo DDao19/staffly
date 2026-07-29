@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { useEmployee } from "../hooks/useEmployee";
 import { Input } from "../ui/Input";
 import { SelectInput } from "../ui/SelectInput";
 import { Button } from "../ui/Button";
 import { states } from "../../data/states";
 import { departments } from "../../data/departments";
 import { locations } from "../../data/locations";
+import { statusOptions } from "../../data/statusOptions";
 import { Alert } from "../ui/Alert";
 import { useDashboardScroll } from "../context/DashboardScrollContext";
 
@@ -20,20 +22,20 @@ export function EmployeeForm() {
     city: "",
     state: "",
     zipCode: "",
-    role: "",
+    jobTitle: "",
     department: "",
     location: "",
     salary: "",
     hireDate: "",
+    status: "PENDING",
   };
+  const { createEmployee } = useEmployee();
 
   const [formError, setFormError] = useState("");
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +45,6 @@ export function EmployeeForm() {
 
   function validateForm() {
     const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required.";
@@ -58,8 +59,12 @@ export function EmployeeForm() {
     }
 
     // Email format check
-    if (formData.email && !emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address.";
+    if (formData.email.trim()) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+      if (!emailRegex.test(formData.email.trim())) {
+        newErrors.email = "Please enter a valid email address.";
+      }
     }
 
     if (!formData.phone.trim()) {
@@ -91,10 +96,6 @@ export function EmployeeForm() {
       newErrors.zipCode = "ZIP code is required.";
     }
 
-    if (!formData.role.trim()) {
-      newErrors.role = "Role is required.";
-    }
-
     // Zip code validation check
     if (formData.zipCode.trim()) {
       const zipRegex = /^\d{5}$/;
@@ -102,6 +103,10 @@ export function EmployeeForm() {
       if (!zipRegex.test(formData.zipCode.trim())) {
         newErrors.zipCode = "ZIP code must be exactly 5 digits";
       }
+    }
+
+    if (!formData.jobTitle.trim()) {
+      newErrors.jobTitle = "Job Title is required.";
     }
 
     if (!formData.department) {
@@ -131,20 +136,6 @@ export function EmployeeForm() {
       newErrors.hireDate = "Hire date is required.";
     }
 
-    // Hire date validation check
-    if (formData.hireDate.trim()) {
-      const selectedDate = new Date(formData.hireDate);
-
-      const today = new Date();
-
-      // Ignore the current time so only the date is compared
-      today.setHours(0, 0, 0, 0);
-
-      if (selectedDate > today) {
-        newErrors.hireDate = "Hire date cannot be in the future.";
-      }
-    }
-
     return newErrors;
   }
 
@@ -158,30 +149,44 @@ export function EmployeeForm() {
     // navigate("/employees");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setIsSubmitting(true);
 
-    const validationErrors = validateForm();
+    try {
+      const validationErrors = validateForm();
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        scrollToTop();
+        setFormError("Please fill out all required fields below.");
+        setSuccessMessage("");
+
+        return;
+      }
+
+      const result = await createEmployee(formData);
+      console.log(result.message);
+
+      if (!result.success) {
+        setFormError(result.message);
+
+        return;
+      }
+
+      setErrors({});
+      setFormError("");
+
+      setFormData(initialFormData);
       scrollToTop();
-      setFormError("Please fill out all required fields below.");
-      setSuccessMessage("");
+      setSuccessMessage("Employee created successfully.");
+    } catch (error) {
+      console.log("handleSubmit error", error);
+      setFormError("Something went wrong. Please try again.");
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    setErrors({});
-    setFormError("");
-
-    console.log(formData);
-    setFormData(initialFormData);
-    scrollToTop();
-    setSuccessMessage("Employee created successfully.");
-    setIsSubmitting(false);
   };
 
   useEffect(() => {
@@ -319,15 +324,15 @@ export function EmployeeForm() {
 
           <div>
             <Input
-              id="role"
-              name="role"
-              label="Role"
-              value={formData.role}
+              id="jobTitle"
+              name="jobTitle"
+              label="Job Title"
+              value={formData.jobTitle}
               onChange={handleChange}
-              error={errors.role}
+              error={errors.jobTitle}
             />
-            {errors.role && (
-              <p className="mt-1 text-sm text-(--error)">{errors.role}</p>
+            {errors.jobTitle && (
+              <p className="mt-1 text-sm text-(--error)">{errors.jobTitle}</p>
             )}
           </div>
 
@@ -395,6 +400,22 @@ export function EmployeeForm() {
               <p className="mt-1 text-sm text-(--error)">{errors.hireDate}</p>
             )}
           </div>
+        </div>
+
+        <div>
+          <SelectInput
+            id="status"
+            name="status"
+            label="Status"
+            value={formData.status}
+            placeholder="Select Status"
+            options={statusOptions}
+            onChange={handleChange}
+            error={errors.status}
+          />
+          {errors.status && (
+            <p className="mt-1 text-sm text-(--error)">{errors.status}</p>
+          )}
         </div>
 
         <hr className="border-(--border)" />

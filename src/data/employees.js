@@ -2,7 +2,7 @@ export const employees = [
   {
     id: 1,
     name: "John Doe",
-    role: "Frontend Developer",
+    jobTitle: "Frontend Developer",
     department: "Engineering",
     location: "Dallas, TX",
     status: "Active",
@@ -11,7 +11,7 @@ export const employees = [
   {
     id: 2,
     name: "Jane Smith",
-    role: "Product Designer",
+    jobTitle: "Product Designer",
     department: "Design",
     location: "Austin, TX",
     status: "Active",
@@ -20,7 +20,7 @@ export const employees = [
   {
     id: 3,
     name: "Mike Johnson",
-    role: "Engineering Manager",
+    jobTitle: "Engineering Manager",
     department: "Engineering",
     location: "Houston, TX",
     status: "Pending",

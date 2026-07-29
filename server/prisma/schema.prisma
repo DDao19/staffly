@@ -7,6 +7,14 @@ datasource db {
   provider = "postgresql"
 }
 
+enum EmployeeStatus {
+  PENDING
+  ACTIVE
+  ON_LEAVE
+  INACTIVE
+}
+
+// Models
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -14,4 +22,31 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
+}
+
+model Employee {
+  id String @id @default(uuid())
+
+  firstName String
+  lastName  String
+
+  email String @unique
+  phone String
+
+  street  String
+  city    String
+  state   String
+  zipCode String
+
+  jobTitle   String
+  department String
+  location   String
+
+  status EmployeeStatus @default(PENDING)
+
+  salary   Decimal  @db.Decimal(7, 2)
+  hireDate DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

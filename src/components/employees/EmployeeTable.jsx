@@ -18,7 +18,7 @@ export default function EmployeeTable() {
                 Status
               </th>
               <th className="whitespace-nowrap px-5 py-4 text-left font-medium text-(--dashboard-blue)">
-                Role
+                Job Title
               </th>
               <th className="whitespace-nowrap px-5 py-4 text-left font-medium text-(--dashboard-blue)">
                 Department
@@ -55,7 +55,7 @@ export default function EmployeeTable() {
                   </Badge>
                 </td>
                 <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                  {employee.role}
+                  {employee.jobTitle}
                 </td>
                 <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
                   {employee.department}
