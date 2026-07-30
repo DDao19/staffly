@@ -10,6 +10,7 @@ import {
 
 export const employeeRouter = Router();
 
+// Create employee
 employeeRouter.post("/", async (req, res) => {
   try {
     const {
@@ -138,6 +139,22 @@ employeeRouter.post("/", async (req, res) => {
 
     return res.status(500).json({
       message: "Something went wrong. Please try again.",
+    });
+  }
+});
+
+// Get all employees
+employeeRouter.get("/", async (req, res) => {
+  try {
+    const employees = await prisma.employee.findMany();
+
+    return res.status(200).json({
+      employees,
+    });
+  } catch (error) {
+    console.log("Get employees error", error);
+    return res.status(500).json({
+      message: "Somethign went wrong while fetching employees.",
     });
   }
 });
