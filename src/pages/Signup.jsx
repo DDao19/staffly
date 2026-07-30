@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../components/hooks/useAuth";
-import { passwordRegex } from "../components/utils/validation";
+import { passwordRegex } from "../utils/validation";
 
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "../components/ui/Input";

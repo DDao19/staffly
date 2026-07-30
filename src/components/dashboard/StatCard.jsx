@@ -1,24 +1,7 @@
-export default function StatCard({ title, value, icon: Icon, iconColor }) {
-  const iconStyles = {
-    purple: {
-      background: "bg-(--dashboard-purple-bg)",
-      color: "text-(--dashboard-purple)",
-    },
-    green: {
-      background: "bg-(--dashboard-green-bg)",
-      color: "text-(--dashboard-green)",
-    },
-    yellow: {
-      background: "bg-(--dashboard-yellow-bg)",
-      color: "text-(--dashboard-yellow)",
-    },
-    blue: {
-      background: "bg-(--dashboard-blue-bg)",
-      color: "text-(--dashboard-blue)",
-    },
-  };
+import { dashboardIconStyles } from "../../data/dashboardIconStyles ";
 
-  const styles = iconStyles[iconColor] ?? iconStyles.purple;
+export default function StatCard({ title, value, icon: Icon, iconColor }) {
+  const styles = dashboardIconStyles[iconColor] ?? dashboardIconStyles.purple;
 
   return (
     <div className="rounded-2xl border border-(--border) bg-(--surface) p-5 shadow-md hover:shadow-lg transition-shadow duration-200">

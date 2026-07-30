@@ -5,7 +5,6 @@ import { Button } from "../components/ui/Button";
 import { Alert } from "../components/ui/Alert";
 import { Spinner } from "../components/ui/Spinner";
 import { useAuth } from "../components/hooks/useAuth";
-// import { AuthContext } from "../components/context/AuthContext";
 
 export default function Signin() {
   const navigate = useNavigate();

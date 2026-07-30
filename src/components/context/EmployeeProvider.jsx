@@ -1,40 +1,42 @@
+import { useState, useEffect } from "react";
 import { EmployeeContext } from "./EmployeeContext";
+import { getEmployees } from "../../services/employeeService";
 
 export default function EmployeeProvider({ children }) {
-  const createEmployee = async (formData) => {
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getAllEmployees = async () => {
+    setLoading(true);
+
     try {
-      const response = await fetch("http://localhost:3000/api/employees", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const result = await getEmployees();
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        return {
-          success: false,
-          message: data.message,
-        };
+      if (!result.success) {
+        console.log(result.message);
+        return;
       }
 
-      return {
-        success: true,
-        message: data.message,
-      };
+      setEmployees(result.employees);
     } catch (error) {
-      console.log("Create employee error", error);
-      return {
-        success: false,
-        message: "Could not create new employee. Please try again later.",
-      };
+      console.log("Fetch employees error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    const loadEmployees = async () => {
+      await getAllEmployees();
+    };
+
+    loadEmployees();
+  }, []);
+
   const value = {
-    createEmployee,
+    employees,
+    getAllEmployees,
+    loading,
   };
 
   return (

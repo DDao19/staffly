@@ -3,6 +3,7 @@ export function Badge({ children, variant = "default" }) {
     success: "bg-(--dashboard-green-bg) text-(--dashboard-green)",
     warning: "bg-(--dashboard-yellow-bg) text-(--dashboard-yellow)",
     error: "bg-(--error-bg) text-(--error)",
+    info: "bg-(--dashboard-blue-bg) text-(--dashboard-blue)",
     default: "bg-(--surface-secondary) text-(--text-secondary)",
   };
 

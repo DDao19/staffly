@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { createEmployee } from "../../services/employeeService";
 import { useEmployee } from "../hooks/useEmployee";
 import { Input } from "../ui/Input";
 import { SelectInput } from "../ui/SelectInput";
@@ -29,8 +29,7 @@ export function EmployeeForm() {
     hireDate: "",
     status: "PENDING",
   };
-  const { createEmployee } = useEmployee();
-
+  const { getAllEmployees } = useEmployee();
   const [formError, setFormError] = useState("");
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
@@ -123,12 +122,17 @@ export function EmployeeForm() {
 
     // Salary validation check
     if (formData.salary.trim()) {
-      const salary = Number(formData.salary);
+      const salaryValue = formData.salary.trim();
+      const salary = Number(salaryValue);
 
-      if (salary <= 0) {
+      if (Number.isNaN(salary)) {
+        newErrors.salary = "Salary must be a valid number.";
+      } else if (salary <= 0) {
         newErrors.salary = "Salary must be greater than 0.";
-      } else if (!Number.isInteger(salary * 100)) {
+      } else if (!/^\d+(\.\d{1,2})?$/.test(salaryValue)) {
         newErrors.salary = "Salary cannot have more than 2 decimal places.";
+      } else if (salary > 999999.99) {
+        newErrors.salary = "Salary cannot exceed $99,999.99.";
       }
     }
 
@@ -174,6 +178,8 @@ export function EmployeeForm() {
 
         return;
       }
+
+      await getAllEmployees();
 
       setErrors({});
       setFormError("");
@@ -370,10 +376,8 @@ export function EmployeeForm() {
 
           <div>
             <Input
-              type="number"
-              step="0.01"
-              min="0"
-              max="1000000"
+              type="text"
+              inputMode="decimal"
               name="salary"
               id="salary"
               label="Salary"

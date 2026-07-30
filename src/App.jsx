@@ -12,6 +12,8 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import NewEmployee from "./pages/NewEmployee";
+import UpdateEmployee from "./pages/UpdateEmployee";
+import EmployeeProfile from "./pages/EmployeeProfile";
 
 export default function App() {
   return (
@@ -33,6 +35,14 @@ export default function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/employees" element={<Employees />} />
                 <Route path="/employees/new" element={<NewEmployee />} />
+                <Route
+                  path="/employees/:id/profile"
+                  element={<EmployeeProfile />}
+                />
+                <Route
+                  path="/employees/:id/update"
+                  element={<UpdateEmployee />}
+                />
               </Route>
             </Route>
           </Routes>
