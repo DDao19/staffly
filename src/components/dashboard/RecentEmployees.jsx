@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { User } from "lucide-react";
 import { Badge } from "../ui/Badge";
 import { TableSkeleton } from "../ui/TableSkeleton";
@@ -5,7 +6,6 @@ import { statusVariant } from "../../data/status";
 import { useEmployee } from "../hooks/useEmployee";
 import {
   getLocationLabel,
-  formatSalary,
   formatDate,
   getDepartmentLabel,
 } from "../../utils/employeeFormatters";
@@ -70,7 +70,9 @@ export default function RecentEmployees() {
                         <div className="h-6 w-6 rounded-full bg-(--surface-secondary) flex items-center justify-center">
                           <User size={16} />
                         </div>
-                        <span>{`${employee.firstName} ${employee.lastName}`}</span>
+                        <Link to={`/employees/${employee.id}/profile`}>
+                          <span>{`${employee.firstName} ${employee.lastName}`}</span>
+                        </Link>
                       </div>
                     </td>
                     <td className="whitespace-nowrap px-5 py-4 text-xs text-(--text) font-medium">

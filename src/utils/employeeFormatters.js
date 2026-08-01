@@ -16,6 +16,14 @@ export function formatSalary(salary) {
   });
 }
 
+export function formatPhoneNumber(phone) {
+  if (!phone || phone.length !== 10) {
+    return phone;
+  }
+
+  return `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`;
+}
+
 export function getDepartmentLabel(value) {
   const department = departments.find(
     (department) => department.value === value,

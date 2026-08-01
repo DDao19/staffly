@@ -85,3 +85,36 @@ export async function getEmployeeById(id) {
     };
   }
 }
+
+export async function updateEmployee(id, employeeData) {
+  try {
+    const response = await fetch(`http://localhost:3000/api/employees/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(employeeData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message,
+      };
+    }
+
+    return {
+      success: true,
+      message: data.message,
+    };
+  } catch (error) {
+    console.log("Updating employee error", error);
+
+    return {
+      success: false,
+      message: "Could not update employee. Please try again later",
+    };
+  }
+}

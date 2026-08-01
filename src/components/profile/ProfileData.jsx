@@ -5,11 +5,17 @@ import { getEmployeeById } from "../../services/employeeService";
 import { Badge } from "../ui/Badge";
 import { EmployeeProfileSkeleton } from "../ui/EmployeeProfileSkeleton";
 import { statusLabels, statusVariant } from "../../data/status";
+import {
+  formatPhoneNumber,
+  getLocationLabel,
+  getDepartmentLabel,
+} from "../../utils/employeeFormatters";
 
 export default function ProfileData() {
-  const { id } = useParams();
   const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchEmployee = async () => {
@@ -70,7 +76,7 @@ export default function ProfileData() {
                 <p className="text-sm text-(--text-secondary)">Phone</p>
 
                 <p className="mt-1 font-medium text-(--text)">
-                  {employee.phone}
+                  {formatPhoneNumber(employee.phone)}
                 </p>
               </div>
 
@@ -104,7 +110,7 @@ export default function ProfileData() {
                 <p className="text-sm text-(--text-secondary)">Department</p>
 
                 <p className="mt-1 font-medium text-(--text)">
-                  {employee.department}
+                  {getDepartmentLabel(employee.department)}
                 </p>
               </div>
 
@@ -112,7 +118,7 @@ export default function ProfileData() {
                 <p className="text-sm text-(--text-secondary)">Location</p>
 
                 <p className="mt-1 font-medium text-(--text)">
-                  {employee.location}
+                  {getLocationLabel(employee.location)}
                 </p>
               </div>
 

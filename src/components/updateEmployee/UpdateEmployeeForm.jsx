@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { createEmployee } from "../../services/employeeService";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  getEmployeeById,
+  updateEmployee,
+} from "../../services/employeeService";
+
 import { useEmployee } from "../hooks/useEmployee";
 import { Input } from "../ui/Input";
 import { SelectInput } from "../ui/SelectInput";
@@ -10,9 +15,13 @@ import { locations } from "../../data/locations";
 import { statusOptions } from "../../data/statusOptions";
 import { Alert } from "../ui/Alert";
 import { useDashboardScroll } from "../context/DashboardScrollContext";
+import { EmployeeFormSkeleton } from "../ui/EmployeeFormSkeleton";
 
-export function EmployeeForm() {
+export default function UpdateEmployee() {
   const { scrollToTop } = useDashboardScroll();
+  const navigate = useNavigate();
+  const { getAllEmployees } = useEmployee();
+
   const initialFormData = {
     firstName: "",
     lastName: "",
@@ -29,18 +38,50 @@ export function EmployeeForm() {
     hireDate: "",
     status: "PENDING",
   };
-  const { getAllEmployees } = useEmployee();
-  const [formError, setFormError] = useState("");
+
+  const [employee, setEmployee] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
+  const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { id } = useParams();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
+
+  // const handleResetForm = (e) => {
+  //   e.preventDefault();
+  //   setFormError("");
+  //   setSuccessMessage("");
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     firstName: employee.firstName,
+  //     lastName: employee.lastName,
+  //     email: employee.email,
+  //     phone: employee.phone,
+  //     street: employee.street,
+  //     city: employee.city,
+  //     state: employee.state,
+  //     zipCode: employee.zipCode,
+  //     jobTitle: employee.jobTitle,
+  //     department: employee.department,
+  //     location: employee.location,
+  //     salary: employee.salary,
+  //     hireDate: employee.hireDate.split("T")[0],
+  //     status: employee.status,
+  //   }));
+  //   setErrors({});
+
+  //   // navigate("/employees");
+  // };
 
   const validateForm = () => {
     const newErrors = {};
@@ -132,7 +173,7 @@ export function EmployeeForm() {
       } else if (!/^\d+(\.\d{1,2})?$/.test(salaryValue)) {
         newErrors.salary = "Salary cannot have more than 2 decimal places.";
       } else if (salary > 999999.99) {
-        newErrors.salary = "Salary cannot exceed $99,999.99.";
+        newErrors.salary = "Salary cannot exceed $999,999.99.";
       }
     }
 
@@ -141,16 +182,6 @@ export function EmployeeForm() {
     }
 
     return newErrors;
-  };
-
-  const handleCancelForm = (e) => {
-    e.preventDefault();
-    setFormError("");
-    setSuccessMessage("");
-    setFormData(initialFormData);
-    setErrors({});
-
-    // navigate("/employees");
   };
 
   const handleSubmit = async (e) => {
@@ -170,41 +201,84 @@ export function EmployeeForm() {
         return;
       }
 
-      const result = await createEmployee(formData);
-      console.log(result.message);
+      const result = await updateEmployee(id, formData);
 
       if (!result.success) {
         setFormError(result.message);
-
         return;
       }
 
       setErrors({});
       setFormError("");
-
-      setFormData(initialFormData);
       scrollToTop();
 
       await getAllEmployees();
 
-      setSuccessMessage("Employee created successfully.");
+      setSuccessMessage("Employee updated successfully.");
+
+      setTimeout(() => {
+        navigate(`/employees/${id}/profile`);
+      }, 1500);
     } catch (error) {
-      console.log("handleSubmit error", error);
+      console.log(error);
       setFormError("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // fetch the employee info
   useEffect(() => {
-    if (!successMessage) return;
+    const fetchEmployee = async () => {
+      try {
+        const result = await getEmployeeById(id);
 
-    const timer = setTimeout(() => {
-      setSuccessMessage("");
-    }, 3000);
+        if (!result.success) {
+          console.log(result.message);
+          return;
+        }
+        setEmployee(result.employee);
+      } catch (error) {
+        console.log("Fetch employee error", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, [successMessage]);
+    fetchEmployee();
+  }, [id]);
+
+  // Copy employee data to formData
+  useEffect(() => {
+    if (!employee) {
+      return;
+    }
+
+    const updatedFormData = () => {
+      setFormData({
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        email: employee.email,
+        phone: employee.phone,
+        street: employee.street,
+        city: employee.city,
+        state: employee.state,
+        zipCode: employee.zipCode,
+        jobTitle: employee.jobTitle,
+        department: employee.department,
+        location: employee.location,
+        salary: employee.salary,
+        hireDate: employee.hireDate.split("T")[0],
+        status: employee.status,
+      });
+    };
+
+    updatedFormData();
+  }, [employee]);
+
+  if (loading) {
+    return <EmployeeFormSkeleton />;
+  }
 
   return (
     <div className="max-w-3xl rounded-xl border border-(--border) bg-(--surface) p-6 shadow-md space-y-2">
@@ -426,21 +500,21 @@ export function EmployeeForm() {
         <hr className="border-(--border)" />
 
         <div className="flex items-center justify-center md:justify-end gap-3">
-          <Button
+          {/* <Button
             variant="outline"
-            onClick={handleCancelForm}
-            aria-label="Cancel"
+            onClick={handleResetForm}
+            aria-label="Reset"
           >
-            Cancel
-          </Button>
+            Reset
+          </Button> */}
 
           <Button
             variant="primary"
             type="submit"
             disabled={isSubmitting}
-            aria-label="Create Employee"
+            aria-label="Save Changes"
           >
-            {isSubmitting ? "Creating..." : "Create Employee"}
+            {isSubmitting ? "Updating..." : "Save Changes"}
           </Button>
         </div>
       </form>

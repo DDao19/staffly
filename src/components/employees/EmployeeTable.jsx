@@ -1,8 +1,9 @@
-import { MoreVertical, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { User } from "lucide-react";
 import { Badge } from "../ui/Badge";
 import { TableSkeleton } from "../ui/TableSkeleton";
 import { statusVariant } from "../../data/status";
-import { Button } from "../ui/Button";
+import { EmployeeActions } from "../employees/EmployeeActions";
 import { useEmployee } from "../hooks/useEmployee";
 import {
   getLocationLabel,
@@ -13,7 +14,6 @@ import {
 
 export default function EmployeeTable() {
   const { employees, loading } = useEmployee();
-  console.log(loading);
 
   return (
     <div className="rounded-xl border border-(--border) bg-(--surface) shadow-md overflow-hidden">
@@ -59,7 +59,9 @@ export default function EmployeeTable() {
                       <div className="h-6 w-6 rounded-full bg-(--surface-secondary) flex items-center justify-center">
                         <User size={16} />
                       </div>
-                      <span>{`${employee.firstName} ${employee.lastName}`}</span>
+                      <Link to={`/employees/${employee.id}/profile`}>
+                        <span>{`${employee.firstName} ${employee.lastName}`}</span>
+                      </Link>
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-5 py-4 text-center text-xs text-(--text) font-medium">
@@ -80,13 +82,7 @@ export default function EmployeeTable() {
                     {formatSalary(employee.salary)}
                   </td>
                   <td className="text-center whitespace-nowrap px-5 py-4">
-                    <Button
-                      variant="ghost"
-                      className="p-2"
-                      aria-label="Employee actions"
-                    >
-                      <MoreVertical size={18} />
-                    </Button>
+                    <EmployeeActions employee={employee} />
                   </td>
                 </tr>
               ))}

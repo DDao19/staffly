@@ -1,7 +1,11 @@
+import UpdateEmployeeHeader from "../components/updateEmployee/UpdateEmployeeHeader";
+import UpdateEmployeeForm from "../components/updateEmployee/UpdateEmployeeForm";
+
 export default function UpdateEmployee() {
   return (
-    <div>
-      <h1>Update Employee</h1>
-    </div>
+    <section className="max-w-7xl mx-auto py-10 space-y-10">
+      <UpdateEmployeeHeader />
+      <UpdateEmployeeForm />
+    </section>
   );
 }
