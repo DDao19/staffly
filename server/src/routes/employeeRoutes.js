@@ -333,3 +333,36 @@ employeeRouter.patch("/:id", async (req, res) => {
     });
   }
 });
+
+// Delete employee route
+employeeRouter.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const employee = await prisma.employee.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!employee) {
+      return res.status(404).json({
+        message: "Employee not found",
+      });
+    }
+
+    await prisma.employee.delete({
+      where: { id },
+    });
+
+    return res.status(200).json({
+      message: "Employee deleted successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      message: "Could not delete employee. Please try again later.",
+    });
+  }
+});

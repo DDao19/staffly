@@ -118,3 +118,32 @@ export async function updateEmployee(id, employeeData) {
     };
   }
 }
+
+export async function deleteEmployee(id) {
+  try {
+    const response = await fetch(`http://localhost:3000/api/employees/${id}`, {
+      method: "DELETE",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.message,
+      };
+    }
+
+    return {
+      success: true,
+      message: data.message,
+    };
+  } catch (error) {
+    console.log("Deleting employee error", error);
+
+    return {
+      success: false,
+      message: "Could not delete employee. Please try again later.",
+    };
+  }
+}

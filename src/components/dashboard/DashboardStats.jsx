@@ -48,7 +48,7 @@ export default function DashboardStats() {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
       {loading
-        ? stats.map(() => <StatCardSkeleton />)
+        ? stats.map((stat) => <StatCardSkeleton key={stat.title} />)
         : stats.map((stat) => <StatCard key={stat.title} {...stat} />)}
     </div>
   );

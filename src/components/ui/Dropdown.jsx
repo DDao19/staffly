@@ -6,7 +6,7 @@ export function Dropdown({ children, position, dropdownRef }) {
   return createPortal(
     <div
       ref={dropdownRef}
-      className="fixed z-50 w-40 rounded-md border border-(--border) bg-(--surface) shadow-md"
+      className="fixed z-50 w-40 rounded-lg border border-(--border) bg-(--surface) shadow-md"
       style={{
         top: position.top,
         left: position.left,

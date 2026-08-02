@@ -1,14 +1,24 @@
 import { useState, useRef, useEffect } from "react";
+import { useEmployee } from "../hooks/useEmployee";
 import { Button } from "../ui/Button";
+import { Link } from "react-router-dom";
+import { ConfirmationModal } from "../ui/ConfirmationModal";
 import { MoreVertical } from "lucide-react";
 import { Dropdown } from "../ui/Dropdown";
+import { deleteEmployee } from "../../services/employeeService";
 
-export function EmployeeActions() {
+export function EmployeeActions({ employee }) {
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+  const { getAllEmployees } = useEmployee();
 
   const [isOpen, setIsOpen] = useState(false);
   const [position, setPosition] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const menuItemClasses =
+    "block w-full px-4 py-2 text-left text-sm hover:bg-(--primary-light) transition-colors";
 
   const handleToggleDropdown = () => {
     if (!isOpen && buttonRef.current) {
@@ -21,6 +31,27 @@ export function EmployeeActions() {
     }
 
     setIsOpen((prev) => !prev);
+  };
+
+  const handleDeleteEmployee = async () => {
+    setIsDeleting(true);
+
+    try {
+      const result = await deleteEmployee(employee.id);
+
+      if (!result.success) {
+        console.log(result.message);
+        return;
+      }
+
+      await getAllEmployees();
+
+      setIsModalOpen(false);
+    } catch (error) {
+      console.log("Error deleting employee:", error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   useEffect(() => {
@@ -58,19 +89,40 @@ export function EmployeeActions() {
 
       {isOpen && (
         <Dropdown position={position} dropdownRef={dropdownRef}>
-          <button className="w-full px-4 py-2 text-left text-sm text-(--text) hover:bg-(--primary-light)">
+          <Link
+            to={`/employees/${employee.id}/profile`}
+            className={`${menuItemClasses} text-(--text)`}
+          >
             View Profile
-          </button>
+          </Link>
 
-          <button className="w-full px-4 py-2 text-left text-sm text-(--text) hover:bg-(--primary-light)">
-            Edit Employee
-          </button>
+          <Link
+            to={`/employees/${employee.id}/update`}
+            className={`${menuItemClasses} text-(--text)`}
+          >
+            Update Employee
+          </Link>
 
-          <button className="w-full px-4 py-2 text-left text-sm text-(--error) hover:bg-(--primary-light)">
+          <button
+            className={`${menuItemClasses} text-(--error)`}
+            onClick={() => {
+              setIsOpen(false);
+              setIsModalOpen(true);
+            }}
+          >
             Delete Employee
           </button>
         </Dropdown>
       )}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Delete Employee"
+        message={`Are you sure you want to delete ${employee.firstName} ${employee.lastName}? This action cannot be undone.`}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={handleDeleteEmployee}
+        confirmText={isDeleting ? "Deleting..." : "Delete"}
+        isConfirming={isDeleting}
+      />
     </div>
   );
 }
