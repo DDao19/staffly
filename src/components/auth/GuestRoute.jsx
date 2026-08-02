@@ -1,11 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { FullPageLoader } from "../ui/FullPageLoader";
 
 export default function GuestRoute() {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return null;
+    return <FullPageLoader />;
   }
 
   if (user) {

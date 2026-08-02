@@ -14,6 +14,7 @@ import Employees from "./pages/Employees";
 import NewEmployee from "./pages/NewEmployee";
 import UpdateEmployee from "./pages/UpdateEmployee";
 import EmployeeProfile from "./pages/EmployeeProfile";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
                 />
               </Route>
             </Route>
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </EmployeeProvider>
       </AuthProvider>

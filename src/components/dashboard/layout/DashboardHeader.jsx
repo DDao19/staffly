@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { EmployeeSearch } from "../../employees/EmployeeSearch";
 import { Menu, Settings, House } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
@@ -7,15 +7,6 @@ import { Avatar } from "../../ui/Avatar";
 
 export default function DashboardHeader({ onMenuClick = () => {} }) {
   const { user } = useAuth();
-
-  const { pathname } = useLocation();
-
-  // const pageTitles = {
-  //   "/dashboard": "Dashboard",
-  //   "/employees": "Employees",
-  //   "/settings": "Settings",
-  // };
-  // const pageTitle = pageTitles[pathname] || "Dashboard";
 
   return (
     <header className="h-16 bg-(--surface) border-b border-(--border) px-6">
