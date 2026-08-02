@@ -1,6 +1,6 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { EmployeeSearch } from "../../employees/EmployeeSearch";
-import { Menu, Settings } from "lucide-react";
+import { Menu, Settings, House } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 import { Avatar } from "../../ui/Avatar";
@@ -10,29 +10,32 @@ export default function DashboardHeader({ onMenuClick = () => {} }) {
 
   const { pathname } = useLocation();
 
-  const pageTitles = {
-    "/dashboard": "Dashboard",
-    "/employees": "Employees",
-    "/settings": "Settings",
-  };
-  const pageTitle = pageTitles[pathname] || "Dashboard";
+  // const pageTitles = {
+  //   "/dashboard": "Dashboard",
+  //   "/employees": "Employees",
+  //   "/settings": "Settings",
+  // };
+  // const pageTitle = pageTitles[pathname] || "Dashboard";
 
   return (
     <header className="h-16 bg-(--surface) border-b border-(--border) px-6">
-      <div className="h-full max-w-7xl mx-auto grid grid-cols-3 items-center">
-        <div className="flex items-center gap-4">
+      <div className="h-full max-w-7xl mx-auto grid grid-cols-[auto_1fr_auto] lg:grid-cols-3 gap-4 items-center">
+        <div className="flex items-center gap-4 mr-2">
           <button
             className="lg:hidden rounded-xl bg-(--primary-light) p-2"
             onClick={onMenuClick}
           >
             <Menu size={24} />
           </button>
-          {/* <h1 className="text-xl font-semibold">{pageTitle}</h1> */}
+
+          <div className="hidden lg:block">
+            <Link to="/dashboard">
+              <House size={24} />
+            </Link>
+          </div>
         </div>
 
-        <div className="flex items-center justify-center">
-          <EmployeeSearch />
-        </div>
+        <EmployeeSearch />
 
         <div className="flex items-center justify-end gap-4">
           <button className="rounded-xl p-2 text-(--text-secondary) hover:bg-(--surface-secondary) focus:outline-none focus:ring-2 focus:ring-(--primary-light)">
