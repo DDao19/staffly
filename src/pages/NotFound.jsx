@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-6">
       <div className="max-w-md text-center">
-        <p className="text-sm font-semibold text-(--primary)">404</p>
+        <h2 className="text-4xl font-semibold text-(--primary)">404</h2>
 
         <h1 className="mt-2 text-4xl font-bold text-(--text)">
           Page Not Found

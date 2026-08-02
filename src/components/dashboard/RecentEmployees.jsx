@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { User } from "lucide-react";
 import { Badge } from "../ui/Badge";
@@ -14,9 +15,11 @@ export default function RecentEmployees() {
   const { employees, loading } = useEmployee();
 
   // Create a new list of employees and only show the first 5
-  const recentEmployees = [...employees]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 5);
+  const recentEmployees = useMemo(() => {
+    return [...employees]
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, 5);
+  }, [employees]);
 
   return (
     <section className="space-y-6">
@@ -60,41 +63,52 @@ export default function RecentEmployees() {
                 </tr>
               </thead>
               <tbody>
-                {recentEmployees.map((employee) => (
-                  <tr
-                    key={employee.id}
-                    className="border-b border-(--border) last:border-none"
-                  >
-                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-semibold">
-                      <div className="flex items-center gap-2">
-                        <div className="h-6 w-6 rounded-full bg-(--surface-secondary) flex items-center justify-center">
-                          <User size={16} />
+                {recentEmployees.length > 0 ? (
+                  recentEmployees.map((employee) => (
+                    <tr
+                      key={employee.id}
+                      className="border-b border-(--border) last:border-none"
+                    >
+                      <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-semibold">
+                        <div className="flex items-center gap-2">
+                          <div className="h-6 w-6 rounded-full bg-(--surface-secondary) flex items-center justify-center">
+                            <User size={16} />
+                          </div>
+                          <Link to={`/employees/${employee.id}/profile`}>
+                            <span>{`${employee.firstName} ${employee.lastName}`}</span>
+                          </Link>
                         </div>
-                        <Link to={`/employees/${employee.id}/profile`}>
-                          <span>{`${employee.firstName} ${employee.lastName}`}</span>
-                        </Link>
-                      </div>
-                    </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-xs text-(--text) font-medium">
-                      <Badge variant={statusVariant[employee.status]}>
-                        {employee.status}
-                      </Badge>
-                    </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                      {employee.jobTitle}
-                    </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                      {getDepartmentLabel(employee.department)}
-                    </td>
-                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text-secondary) font-medium">
-                      {getLocationLabel(employee.location)}
-                    </td>
+                      </td>
+                      <td className="whitespace-nowrap px-5 py-4 text-xs text-(--text) font-medium">
+                        <Badge variant={statusVariant[employee.status]}>
+                          {employee.status}
+                        </Badge>
+                      </td>
+                      <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
+                        {employee.jobTitle}
+                      </td>
+                      <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
+                        {getDepartmentLabel(employee.department)}
+                      </td>
+                      <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text-secondary) font-medium">
+                        {getLocationLabel(employee.location)}
+                      </td>
 
-                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                      {formatDate(employee.createdAt)}
+                      <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
+                        {formatDate(employee.createdAt)}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="h-60 text-center text-sm text-(--text-secondary)"
+                    >
+                      No recent employees found.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           )}

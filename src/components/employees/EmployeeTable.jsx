@@ -58,7 +58,7 @@ export default function EmployeeTable() {
     <div className="rounded-xl border border-(--border) bg-(--surface) shadow-md overflow-hidden">
       <div className="overflow-x-auto">
         {loading ? (
-          <TableSkeleton columns={7} rows={6} />
+          <TableSkeleton columns={8} rows={6} />
         ) : (
           <table className="w-full min-w-225">
             <thead className="bg-(--dashboard-blue-bg)">
@@ -90,89 +90,102 @@ export default function EmployeeTable() {
               </tr>
             </thead>
             <tbody>
-              {currentEmployees.map((employee) => (
-                <tr
-                  key={employee.id}
-                  className="border-b border-(--border) last:border-none"
-                >
-                  <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-semibold">
-                    <div className="flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-full bg-(--surface-secondary) flex items-center justify-center">
-                        <User size={16} />
+              {currentEmployees.length > 0 ? (
+                currentEmployees.map((employee) => (
+                  <tr
+                    key={employee.id}
+                    className="border-b border-(--border) last:border-none"
+                  >
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-semibold">
+                      <div className="flex items-center gap-2">
+                        <div className="h-6 w-6 rounded-full bg-(--surface-secondary) flex items-center justify-center">
+                          <User size={16} />
+                        </div>
+                        <Link to={`/employees/${employee.id}/profile`}>
+                          <span>{`${employee.firstName} ${employee.lastName}`}</span>
+                        </Link>
                       </div>
-                      <Link to={`/employees/${employee.id}/profile`}>
-                        <span>{`${employee.firstName} ${employee.lastName}`}</span>
-                      </Link>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-center text-xs text-(--text) font-medium">
-                    <Badge variant={statusVariant[employee.status]}>
-                      {getStatusLabel(employee.status)}
-                    </Badge>
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                    {employee.jobTitle}
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                    {getDepartmentLabel(employee.department)}
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text-secondary) font-medium">
-                    {getLocationLabel(employee.location)}
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                    {formatSalary(employee.salary)}
-                  </td>
-                  <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
-                    {formatDate(employee.hireDate)}
-                  </td>
-                  <td className="text-center whitespace-nowrap px-5 py-4">
-                    <EmployeeActions employee={employee} />
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-center text-xs text-(--text) font-medium">
+                      <Badge variant={statusVariant[employee.status]}>
+                        {getStatusLabel(employee.status)}
+                      </Badge>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
+                      {employee.jobTitle}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
+                      {getDepartmentLabel(employee.department)}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text-secondary) font-medium">
+                      {getLocationLabel(employee.location)}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
+                      {formatSalary(employee.salary)}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-(--text) font-medium">
+                      {formatDate(employee.hireDate)}
+                    </td>
+                    <td className="text-center whitespace-nowrap px-5 py-4">
+                      <EmployeeActions employee={employee} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={8}
+                    className="h-70 text-center text-sm text-(--text-secondary)"
+                  >
+                    Currently no employees..
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         )}
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between border-t border-(--border) px-5 py-4">
-        <Button
-          variant="outline"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          Previous
-        </Button>
+      {currentEmployees.length > 0 && (
+        <div className="flex items-center justify-between border-t border-(--border) px-5 py-4">
+          <Button
+            variant="outline"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+          >
+            Previous
+          </Button>
 
-        <div className="flex items-center gap-2">
-          {Array.from({ length: totalPages }, (_, index) => {
-            const page = index + 1;
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalPages }, (_, index) => {
+              const page = index + 1;
 
-            return (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={
-                  currentPage === page
-                    ? "rounded-md bg-(--primary) px-3 py-1 text-sm text-white"
-                    : "rounded-md px-3 py-1 text-sm text-(--text) hover:bg-(--primary-light)"
-                }
-              >
-                {page}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={
+                    currentPage === page
+                      ? "rounded-md bg-(--primary) px-3 py-1 text-sm text-white"
+                      : "rounded-md px-3 py-1 text-sm text-(--text) hover:bg-(--primary-light)"
+                  }
+                >
+                  {page}
+                </button>
+              );
+            })}
+          </div>
+
+          <Button
+            variant="outline"
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+          >
+            Next
+          </Button>
         </div>
-
-        <Button
-          variant="outline"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          Next
-        </Button>
-      </div>
+      )}
     </div>
   );
 }
