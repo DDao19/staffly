@@ -88,7 +88,7 @@ authRouter.post("/signin", async (req, res) => {
   }
   // create a token for the user
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "1d",
   });
 
   return res.status(200).json({

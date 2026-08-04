@@ -19,7 +19,10 @@ app.use("/api/auth", authRouter);
 app.use("/api/employees", employeeRouter);
 
 app.get("/", (req, res) => {
-  res.send("Staffly API is running");
+  res.json({
+    message: "Staffly API is running",
+    status: "ok",
+  });
 });
 
 app.listen(PORT, () => {
