@@ -7,13 +7,16 @@ export default function AuthProvider({ children }) {
 
   const signup = async (formData) => {
     try {
-      const response = await fetch("http://localhost:3000/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
       const data = await response.json();
 
@@ -38,13 +41,16 @@ export default function AuthProvider({ children }) {
   };
 
   const login = async (formData) => {
-    const response = await fetch("http://localhost:3000/api/auth/signin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/auth/signin`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       },
-      body: JSON.stringify(formData),
-    });
+    );
 
     const data = await response.json();
 
@@ -87,12 +93,15 @@ export default function AuthProvider({ children }) {
       }
 
       try {
-        const response = await fetch("http://localhost:3000/api/auth/verify", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/auth/verify`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         const data = await response.json();
 

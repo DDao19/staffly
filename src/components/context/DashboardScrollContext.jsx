@@ -1,14 +1,14 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useCallback } from "react";
 
 const DashboardScrollContext = createContext(null);
 
 export function DashboardScrollProvider({ children, mainRef }) {
-  function scrollToTop() {
+  const scrollToTop = useCallback(() => {
     mainRef.current?.scrollTo({
       top: 0,
       behavior: "smooth",
     });
-  }
+  }, [mainRef]);
 
   return (
     <DashboardScrollContext.Provider value={{ scrollToTop }}>

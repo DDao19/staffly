@@ -1,12 +1,15 @@
 export async function createEmployee(formData) {
   try {
-    const response = await fetch("http://localhost:3000/api/employees", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/employees`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       },
-      body: JSON.stringify(formData),
-    });
+    );
 
     const data = await response.json();
 
@@ -33,7 +36,9 @@ export async function createEmployee(formData) {
 
 export async function getEmployees() {
   try {
-    const response = await fetch("http://localhost:3000/api/employees");
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/employees`,
+    );
 
     const data = await response.json();
 
@@ -60,7 +65,9 @@ export async function getEmployees() {
 
 export async function getEmployeeById(id) {
   try {
-    const response = await fetch(`http://localhost:3000/api/employees/${id}`);
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/employees/${id}`,
+    );
 
     const data = await response.json();
 
@@ -88,13 +95,16 @@ export async function getEmployeeById(id) {
 
 export async function updateEmployee(id, employeeData) {
   try {
-    const response = await fetch(`http://localhost:3000/api/employees/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/employees/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(employeeData),
       },
-      body: JSON.stringify(employeeData),
-    });
+    );
 
     const data = await response.json();
 
@@ -121,9 +131,12 @@ export async function updateEmployee(id, employeeData) {
 
 export async function deleteEmployee(id) {
   try {
-    const response = await fetch(`http://localhost:3000/api/employees/${id}`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/employees/${id}`,
+      {
+        method: "DELETE",
+      },
+    );
 
     const data = await response.json();
 

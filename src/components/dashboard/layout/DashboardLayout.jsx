@@ -4,6 +4,7 @@ import { DashboardScrollProvider } from "../../context/DashboardScrollContext";
 
 import Sidebar from "./Sidebar";
 import DashboardHeader from "./DashboardHeader";
+import DashboardScrollToTop from "../../layout/DashboardScrollToTop";
 
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -48,11 +49,13 @@ export default function DashboardLayout() {
 
       <div className="min-w-0 flex-1 flex flex-col">
         <DashboardHeader onMenuClick={() => setIsSidebarOpen(true)} />
-        <main className="flex-1 overflow-y-auto p-6" ref={mainRef}>
-          <DashboardScrollProvider mainRef={mainRef}>
+
+        <DashboardScrollProvider mainRef={mainRef}>
+          <main className="flex-1 overflow-y-auto p-6" ref={mainRef}>
+            <DashboardScrollToTop />
             <Outlet />
-          </DashboardScrollProvider>
-        </main>
+          </main>
+        </DashboardScrollProvider>
       </div>
     </div>
   );
